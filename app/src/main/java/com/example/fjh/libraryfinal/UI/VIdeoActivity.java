@@ -16,4 +16,9 @@ public class VIdeoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_video);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
