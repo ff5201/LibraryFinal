@@ -24,7 +24,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         btn_search.setOnClickListener(this);
         Button btn_add=(Button)findViewById(R.id.btn_add);
         btn_add.setOnClickListener(this);
-
+        Button btn_room=(Button)findViewById(R.id.btn_room);
+        btn_room.setOnClickListener(this);
         Button btn_music=(Button)findViewById(R.id.btn_music);
         btn_music.setOnClickListener(this);
         Button btn_video=(Button)findViewById(R.id.btn_video);
@@ -43,7 +44,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 intent=new Intent(v.getContext(),AddActivity.class);
                 v.getContext().startActivity(intent);
                 break;
-
+            case R.id.btn_room:
+                intent=new Intent(v.getContext(),RoomActivity.class);
+                v.getContext().startActivity(intent);
+                break;
             case R.id.btn_music:
                intent=new Intent(v.getContext(),MusicActivity.class);
                 v.getContext().startActivity(intent);
