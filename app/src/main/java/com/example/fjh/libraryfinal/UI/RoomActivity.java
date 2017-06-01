@@ -107,7 +107,19 @@ public class RoomActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try{
+            bw.write("exit\n");
+            bw.flush();
+            br.close();
+            bw.close();
+            socket.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
     class asyncWaitForNet extends AsyncTask<Void, String, Void>{
         @Override
@@ -115,7 +127,7 @@ public class RoomActivity extends AppCompatActivity {
             super.onPreExecute();
             /*progressDialog=ProgressDialog.show(RoomActivity.this,"请求网络","正在请求网络",false);*/
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
-            progressDialog.setCancelable(true);// 设置是否可以通过点击Back键取消
+            progressDialog.setCancelable(false);// 设置是否可以通过点击Back键取消
             progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
             progressDialog.setTitle("请求网络");
             progressDialog.setMessage("正在请求网络!");
@@ -128,7 +140,7 @@ public class RoomActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
            while (true){
                try {
-                   socket = new Socket("116.10.19.58", 8008);// 网络访问最好放在线程中
+                   socket = new Socket("124.226.80.215", 8008);// 网络访问最好放在线程中
                /*new Thread(new chatThread(socket)).start();// 启动子线程*/
                    br = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
                    bw= new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
