@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fjh.libraryfinal.Adapter.MsgAdapter;
+import com.example.fjh.libraryfinal.Control.ActivityCollector;
 import com.example.fjh.libraryfinal.Model.Msg;
 import com.example.fjh.libraryfinal.R;
 
@@ -60,6 +61,8 @@ public class RoomActivity extends AppCompatActivity {
     Button btn_send;
     TextView inputText;
 
+    boolean LinkedState=false;
+
     //String path="https://www.baidu.com/";
 
     @Override
@@ -67,6 +70,7 @@ public class RoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_room);
         setTitle("聊天室");
+        ActivityCollector.addActivity(this);
 
         progressDialog=new ProgressDialog(RoomActivity.this);
         asyncWaitForNet=new asyncWaitForNet();
@@ -108,14 +112,37 @@ public class RoomActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //如果异步任务不为空 并且状态是 运行时  ，就把他取消这个加载任务
+        if(asyncWaitForNet !=null && asyncWaitForNet.getStatus() == AsyncTask.Status.RUNNING){
+            asyncWaitForNet.cancel(true);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         try{
-            bw.write("exit\n");
-            bw.flush();
-            br.close();
-            bw.close();
-            socket.close();
+            if(LinkedState==true){
+                bw.write("exit\n");
+                bw.flush();
+                br.close();
+                bw.close();
+                socket.close();
+            }
+            finish();
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -140,8 +167,8 @@ public class RoomActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
            while (true){
                try {
-                   socket = new Socket("124.226.80.215", 8008);// 网络访问最好放在线程中
-               /*new Thread(new chatThread(socket)).start();// 启动子线程*/
+                   socket = new Socket("10.211.5.241", 8008);// 网络访问最好放在线程中
+                   /*new Thread(new chatThread(socket)).start();// 启动子线程*/
                    br = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
                    bw= new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8"));
                    publishProgress("success");
@@ -166,7 +193,10 @@ public class RoomActivity extends AppCompatActivity {
                    }else {}
                }
            } catch (IOException e) {
-               Toast.makeText(getApplicationContext(), "接收数据失败！", Toast.LENGTH_SHORT).show();
+               publishProgress("interrupt");
+               e.printStackTrace();
+           }catch (Exception e){
+               publishProgress("interrupt");
                e.printStackTrace();
            }
            return null;
@@ -189,12 +219,22 @@ public class RoomActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... values) {
             if(values[0].equals("success")){
                 progressDialog.dismiss(); //隐藏
+                LinkedState=true;
                 Toast.makeText(getApplicationContext(),"网络已经连接",Toast.LENGTH_SHORT).show();
             }else if(values[0].equals("error")){
                 progressDialog.setTitle("结果");
                 progressDialog.setMessage("无网络,请检查网络!");
                 progressDialog.show();
+                LinkedState=false;
                 Toast.makeText(getApplicationContext(),"无网络",Toast.LENGTH_SHORT).show();
+            }else if(values[0].equals("interrupt")){
+                try {
+                    br.close();
+                    bw.close();
+                    socket.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
             }else{
                 Log.d("Progress消息",values[0].toString());
                 Msg msgr = new Msg(values[0].toString(), Msg.TYPE_RECEIVED);

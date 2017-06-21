@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-
+                startActivity(new Intent(this,SettingActivity.class));
                 break;
             case 2:
                 ActivityCollector.finishAll();

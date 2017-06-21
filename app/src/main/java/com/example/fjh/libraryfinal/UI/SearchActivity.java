@@ -47,9 +47,11 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_search);
         setTitle("图书查询");
+        Log.d("图书查询","1");
         DBconnection.setContext(this.getApplicationContext());
+        Log.d("图书查询","2");
         createTable(BookList.getBookList());
-
+        Log.d("图书查询","3");
 
         txtID=(EditText)findViewById(R.id.ID);
         txtName=(EditText)findViewById(R.id.name);

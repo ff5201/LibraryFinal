@@ -26,25 +26,34 @@ public class BookList extends ArrayList<Book> {
 
     public static BookList getBookList() {
         if (bookList == null||flag==false) {
+            Log.d("书本列表","1");
             bookList = new BookList();
+            Log.d("书本列表","2");
             DBconnection dBconnection = new DBconnection();
+            Log.d("书本列表","3");
             SQLiteDatabase db = dBconnection.getConnection();
+            Log.d("书本列表","4");
             Cursor cursor = db.query("book", null, null, null, null, null, null);
-            cursor.moveToFirst();
-            do{
-                int idNum = cursor.getColumnIndex("ID");
-                int nameNum = cursor.getColumnIndex("name");
-                int authorNum = cursor.getColumnIndex("author");
-                int addressNum=cursor.getColumnIndex("address");
-                String id = cursor.getString(idNum);
-                String name = cursor.getString(nameNum);
-                String author = cursor.getString(authorNum);
-                String address=cursor.getString(addressNum);
-                Book book = new Book(id, name, author,address);
-                bookList.add(book);
-            }while (cursor.moveToNext());
+            Log.d("书本列表","5");
+            if(cursor.moveToFirst()){
+                do{
+                    Log.d("书本列表","6");
+                    int idNum = cursor.getColumnIndex("ID");
+                    int nameNum = cursor.getColumnIndex("name");
+                    int authorNum = cursor.getColumnIndex("author");
+                    int addressNum=cursor.getColumnIndex("address");
+                    String id = cursor.getString(idNum);
+                    String name = cursor.getString(nameNum);
+                    String author = cursor.getString(authorNum);
+                    String address=cursor.getString(addressNum);
+                    Book book = new Book(id, name, author,address);
+                    bookList.add(book);
+                }while (cursor.moveToNext());
+            }
+            Log.d("书本列表","7");
             dBconnection.close(db);
         }
+        Log.d("书本列表","8");
         flag=true;
         return bookList;
     }

@@ -40,6 +40,8 @@ public class MusicActivity extends AppCompatActivity {
     private Thread thread;
     //音乐是否播放完成标准
     private boolean flag=true;
+    //停止标志
+    private boolean stopFlag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,12 +153,15 @@ public class MusicActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 Log.d(TAG, "post");
-                myhandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateTimePos();
-                    }
-                });
+                if(!stopFlag){
+                    Log.d(TAG,"停止thread");
+                    myhandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateTimePos();
+                        }
+                    });
+                }
             }
         }
     }
@@ -180,10 +185,12 @@ public class MusicActivity extends AppCompatActivity {
     public void setStopMusic(){
         if(btn_stop.getText().equals("停止")){
             mPlayer.stop();
+            stopFlag=true;
             btn_stop.setText("重播");
         }else if(btn_stop.getText().equals("重播")){
             mPlayer.reset();
             initMediaPlayer();
+            stopFlag=false;
             mPlayer.start();
             btn_stop.setText("停止");
         }

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.example.fjh.libraryfinal.Control.ActivityCollector;
 import com.example.fjh.libraryfinal.R;
 import com.example.fjh.libraryfinal.Tools.DensityUtil;
 
@@ -31,6 +32,7 @@ public class VIdeoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_video);
         setTitle("视频播放");
+        ActivityCollector.addActivity(this);
 
         videoView=(VideoView)findViewById(R.id.videoView);
         rlv=(RelativeLayout)findViewById(R.id.video_rl);

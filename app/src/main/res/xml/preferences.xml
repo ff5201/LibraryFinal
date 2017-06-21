@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="我的主页">
+        <CheckBoxPreference android:title="使用个性签名"
+            android:summary="使用签名设计软件设计个性签名"
+            android:key="sign_name"/>
+        <CheckBoxPreference android:title="启动流动网络设置"
+            android:summary="确认上网"
+            android:key="data_setting"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="个人信息设置">
+        <CheckBoxPreference android:title="是否保存个人信息"
+            android:key="yeson_save_individual_info"/>
+        <EditTextPreference android:title="姓名"
+            android:summary="请输入真实姓名"
+            android:key="individual_name"/>
+        <PreferenceScreen android:title="其他个人信息"
+            android:summary="是否在校学习、手机"
+            android:key="other_student_msg">
+            <CheckBoxPreference android:title="是否在校学习"
+                android:key="is_a_student"/>
+            <EditTextPreference android:title="手机"
+                android:summary="请输入您的真实手机号码"
+                android:key="mobile"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>
